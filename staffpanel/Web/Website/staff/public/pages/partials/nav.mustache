@@ -1,0 +1,45 @@
+<body>
+    <nav class='navbar navbar-expand-lg navbar-dark bg-danger'>
+        <a class='navbar-brand' href='/'>{{ community_name }}</a>
+
+        <ul class='navbar-nav mr-auto'>
+            <li class='nav-item {{#navDashboard}}active{{/navDashboard}} dropdown'>
+                <a class='nav-link dropdown-toggle' href='#' id='dashboardDropdown' role='button' data-toggle='dropdown'>
+                    Dashboard
+                </a>
+                <div class='dropdown-menu' aria-labelledby='dashboardDropdown'>
+                    <a class='dropdown-item' href='/dashboard/profile'>My Profile</a>
+                </div>
+            </li>
+
+            {{# isStaff }}
+            <li class='nav-item {{#navStaff}}active{{/navStaff}} dropdown'>
+                <a class='nav-link dropdown-toggle' href='#' id='staffDropdown' role='button' data-toggle='dropdown'>
+                    Staff
+                </a>
+                <div class='dropdown-menu' aria-labelledby='staffDropdown'>
+                    <a class='dropdown-item' href='/staff/players'>Players</a>
+                    <a class='dropdown-item' href='/staff/servers'>Servers</a>
+                    <a class='dropdown-item' href='/staff/warnings'>Warnings</a>
+                    <a class='dropdown-item' href='/staff/kicks'>Kicks</a>
+                    <a class='dropdown-item' href='/staff/bans'>Bans</a>
+                    <a class='dropdown-item' href='/staff/commends'>Commends</a>
+                    <a class='dropdown-item' href='/staff/mystats'>My Stats</a>
+                </div>
+            </li>
+            {{/ isStaff}}
+
+            {{# isAdmin }}
+            <li class='nav-item {{#navAdmin}}active{{/navAdmin}} dropdown'>
+                <a class='nav-link dropdown-toggle' href='#' id='adminDropdown' role='button' data-toggle='dropdown'>
+                    Admin
+                </a>
+                <div class='dropdown-menu' aria-labelledby='adminDropdown'>
+                    <a class='dropdown-item' href='/admin/servers'>Servers</a>
+                    <a class='dropdown-item' href='/admin/stats'>Staff Stats</a>
+                </div>
+            </li>
+            {{/ isAdmin}}
+        </ul>
+    </nav>
+</body>

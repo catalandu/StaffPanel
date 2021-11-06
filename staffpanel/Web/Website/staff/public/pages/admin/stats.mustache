@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    {{> header }}
+    {{> nav }}
+
+    <script>
+        function gotoStats() {
+            window.location.href = `/admin/stats/${$('.discord-id-input').val()}`
+        }
+
+        function gotoStatsName() {
+            window.location.href = `/admin/stats/${$('.game-name-input').val()}`
+        }
+
+        function gotoStatsDiscord() {
+            window.location.href = `/admin/stats/${$('.game-discord-input').val().replace('#', 'hashtaghasbeenputhere')}`
+        }
+    </script>
+
+    <style>
+        .nav-link.active {
+            background-color: #343a40 !important;
+            color: white !important;
+            border: 1px solid #343a40 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class='text-light' style='text-align: center; margin-top: 20px;'>Staff Statistics</h1>
+    <div class='card text-center bg-dark text-white' style='width: 90%; margin: 0 auto; float: none; margin-top: 25px'>
+        <div class='card-header bg-danger'>
+            <ul id='nav-tabs' class='nav nav-tabs card-header-tabs'>
+                <li class='nav-item'>
+                    <a class='nav-link active' style='color: white' id='information-tab' data-toggle='tab' href='#all'
+                        role='tab' aria-controls='information' aria-selected='true'>Lookup</a>
+                </li>
+            </ul>
+        </div>
+        <div class='tab-content'>
+            <div class='tab-pane fade show active' id='all' role='tabpanel' aria-labelledby='all-tab'>
+                <div class='card-body'>
+                    <h5 class='card-title'>What's This?</h5>
+                    <p class='card-text'>Here you can look up the statistics of any staff member by id.</p>
+                    <div class='container' style='max-width: 95%'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>Stats Lookup</h5>
+                                        <label for='discordId'>Discord Id</label>
+                                        <input type='text' class='form-control discord-id-input' id='discordId'
+                                            placeholder='Enter Discord Id'>
+                                        <p style='margin-top: 10px'><a href='javascript:gotoStats()' class='btn btn-primary'>Get Stats</a></p>
+                                        <label for='discordId'>In-Game Name</label>
+                                        <input type='text' class='form-control game-name-input' id='discordId'
+                                            placeholder='Enter In-Game Name'>
+                                        <p style='margin-top: 10px'><a href='javascript:gotoStatsName()' class='btn btn-primary'>Get Stats</a></p>
+                                        <label for='discordId'>Discord Name</label>
+                                        <input type='text' class='form-control game-discord-input' id='discordId'
+                                            placeholder='Enter Discord Name'>
+                                        <p style='margin-top: 10px'><a href='javascript:gotoStatsDiscord()' class='btn btn-primary'>Get Stats</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

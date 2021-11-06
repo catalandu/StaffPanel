@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='UTF-8'>
+    <title>FiveM - Scotty</title>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js'></script>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css'/>
+
+    <style type='text/css'>
+        * {
+            background-color: transparent
+        }
+    </style>
+
+    <script>
+        window.addEventListener('message', (event) => {
+            const data = event.data
+            if (data.warning) {
+                iziToast.error({
+                    title: 'You\'ve been warned by staff.\n',
+                    message: data.warning,
+                    position: 'center',
+                    close: false,
+                    layout: 2
+                })
+            } else if (data.success) {
+                iziToast.success({
+                    title: 'You\'ve been commended by staff.\n',
+                    message: data.success,
+                    position: 'topCenter',
+                    close: false,
+                    layout: 2
+                })
+            }
+        })
+    </script>
+</head>

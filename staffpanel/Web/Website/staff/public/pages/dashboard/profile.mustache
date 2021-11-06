@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    {{> header }}
+    {{> nav }}
+
+    <style>
+        .nav-link.active {
+            background-color: #343a40 !important;
+            color: white !important;
+            border: 1px solid #343a40 !important;
+        }
+
+        .avatar {
+            vertical-align: middle;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class='text-light' style='text-align: center; margin-top: 20px;'> {{ username }}'s Profile.</h1>
+    <div class='card text-center bg-dark text-white' style='width: 90%; margin: 0 auto; float: none; margin-top: 25px'>
+        <div class='card-header bg-danger'>
+            <ul id='nav-tabs' class='nav nav-tabs card-header-tabs'>
+                <li class='nav-item'>
+                    <a class='nav-link active' style='color: white' id='information-tab' data-toggle='tab'
+                        href='#information' role='tab' aria-controls='information' aria-selected='true'>Information</a>
+                </li>
+                <li class='nav-item'>
+                    <a class='nav-link' style='margin-left: 5px; color: white' id='warnings-tab' data-toggle='tab'
+                        href='#warnings' role='tab' aria-controls='warnings' aria-selected='true'>Warnings</a>
+                </li>
+                <li class='nav-item'>
+                    <a class='nav-link' style='margin-left: 5px; color: white' id='kicks-tab' data-toggle='tab'
+                        href='#kicks' role='tab' aria-controls='kicks' aria-selected='true'>Kicks</a>
+                </li>
+                <li class='nav-item'>
+                    <a class='nav-link' style='margin-left: 5px; color: white' id='bans-tab' data-toggle='tab'
+                        href='#bans' role='tab' aria-controls='bans' aria-selected='true'>Bans</a>
+                </li>
+                <li class='nav-item'>
+                    <a class='nav-link' style='margin-left: 5px; color: white' id='commends-tab' data-toggle='tab'
+                        href='#commends' role='tab' aria-controls='commends' aria-selected='true'>Commends</a>
+                </li>
+            </ul>
+        </div>
+        <div class='tab-content'>
+            <div class='tab-pane fade show active' id='information' role='tabpanel' aria-labelledby='information-tab'>
+                <div class='card-body'>
+                    <h5 class='card-title'>What's This?</h5>
+                    <p class='card-text'>Here you can find information about a player gathered by the portal.</p>
+                    <div class='container' style='max-width: 95%'>
+                        <div class='row'>
+                            <div class='col-3'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'><img class='avatar'
+                                                src='https://cdn.discordapp.com/avatars/{{& id }}/{{& avatar }}'
+                                                alt='Avatar'></h5>
+                                        <h5 class='card-title'>Username</h5>
+                                        <p class='card-text'>{{ username }}#{{ discriminator }}</p>
+                                        <h5 class='card-title'>Trust Score</h5>
+                                        <p class='card-text'>{{ trustscore }}%</p>
+                                        <h5 class='card-title'>Playtime</h5>
+                                        <p class='card-text'>{{ playtime }}</p>
+                                        <h5 class='card-title'>Identifiers</h5>
+                                        <p class='card-text'><samp>discord:{{ id }}</samp></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-9'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>Notes</h5>
+                                        <p class='card-text'>Normally, here you would be able to find notes left by
+                                            staff. However this is hidden from you as you're not a staff member. Keep in
+                                            mind that a lot of information is hidden in this section because of this.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='tab-pane fade' id='warnings' role='tabpanel' aria-labelledby='warnings-tab'>
+                <div class='card-body'>
+                    <h5 class='card-title'>What's This?</h5>
+                    <p class='card-text'>Here you can find all the warnings you have gotten from staff members.</p>
+                    <div class='container' style='max-width: 95%'>
+                        <div class='row'>
+                            <div class='col-3'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'><img class='avatar'
+                                                src='https://cdn.discordapp.com/avatars/{{& id }}/{{& avatar }}'
+                                                alt='Avatar'></h5>
+                                        <h5 class='card-title'>Username</h5>
+                                        <p class='card-text'>{{ username }}#{{ discriminator }}</p>
+                                        <h5 class='card-title'>Trust Score</h5>
+                                        <p class='card-text'>{{ trustscore }}%</p>
+                                        <h5 class='card-title'>Playtime</h5>
+                                        <p class='card-text'>{{ playtime }}</p>
+                                        <h5 class='card-title'>Identifiers</h5>
+                                        <p class='card-text'><samp>discord:{{ id }}</samp></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-9'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>Warnings</h5>
+                                        {{# hasWarnings }}
+                                        <table class='table table-dark'>
+                                            <thead>
+                                                <tr>
+                                                    <th>Reason</th>
+                                                    <th>Staff Member</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{# warnings }}
+                                                <tr>    
+                                                    <td>{{ reason }}</td>
+                                                    <td>{{ staffname }}</td>
+                                                    <td>{{ date }}</td>
+                                                </tr>
+                                                {{/ warnings }}
+                                            </tbody>
+                                        </table>
+                                        {{/ hasWarnings }}
+                                        {{^ hasWarnings }}
+                                        <p class='card-text'>No Warnings!</p>
+                                        {{/ hasWarnings }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='tab-pane fade' id='kicks' role='tabpanel' aria-labelledby='kicks-tab'>
+                <div class='card-body'>
+                    <h5 class='card-title'>What's This?</h5>
+                    <p class='card-text'>Here you can find all the kicks you have gotten from staff members.</p>
+                    <div class='container' style='max-width: 95%'>
+                        <div class='row'>
+                            <div class='col-3'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'><img class='avatar'
+                                                src='https://cdn.discordapp.com/avatars/{{& id }}/{{& avatar }}'
+                                                alt='Avatar'></h5>
+                                        <h5 class='card-title'>Username</h5>
+                                        <p class='card-text'>{{ username }}#{{ discriminator }}</p>
+                                        <h5 class='card-title'>Trust Score</h5>
+                                        <p class='card-text'>{{ trustscore }}%</p>
+                                        <h5 class='card-title'>Playtime</h5>
+                                        <p class='card-text'>{{ playtime }}</p>
+                                        <h5 class='card-title'>Identifiers</h5>
+                                        <p class='card-text'><samp>discord:{{ id }}</samp></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-9'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>Kicks</h5>
+                                        {{# hasKicks }}
+                                        <table class='table table-dark'>
+                                            <thead>
+                                                <tr>
+                                                    <th>Reason</th>
+                                                    <th>Staff Member</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{# kicks }}
+                                                <tr>    
+                                                    <td>{{ reason }}</td>
+                                                    <td>{{ staffname }}</td>
+                                                    <td>{{ date }}</td>
+                                                </tr>
+                                                {{/ kicks }}
+                                            </tbody>
+                                        </table>
+                                        {{/ hasKicks }}
+                                        {{^ hasKicks }}
+                                        <p class='card-text'>No Kicks!</p>
+                                        {{/ hasKicks }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='tab-pane fade' id='bans' role='tabpanel' aria-labelledby='bans-tab'>
+                <div class='card-body'>
+                    <h5 class='card-title'>What's This?</h5>
+                    <p class='card-text'>Here you can find all the bans you have gotten from staff members.</p>
+                    <div class='container' style='max-width: 95%'>
+                        <div class='row'>
+                            <div class='col-3'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'><img class='avatar'
+                                                src='https://cdn.discordapp.com/avatars/{{& id }}/{{& avatar }}'
+                                                alt='Avatar'></h5>
+                                        <h5 class='card-title'>Username</h5>
+                                        <p class='card-text'>{{ username }}#{{ discriminator }}</p>
+                                        <h5 class='card-title'>Trust Score</h5>
+                                        <p class='card-text'>{{ trustscore }}%</p>
+                                        <h5 class='card-title'>Playtime</h5>
+                                        <p class='card-text'>{{ playtime }}</p>
+                                        <h5 class='card-title'>Identifiers</h5>
+                                        <p class='card-text'><samp>discord:{{ id }}</samp></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-9'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>Bans</h5>
+                                        {{# hasBans }}
+                                        <table class='table table-dark'>
+                                            <thead>
+                                                <tr>
+                                                    <th>Reason</th>
+                                                    <th>Staff Member</th>
+                                                    <th>Length</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{# bans }}
+                                                <tr>    
+                                                    <td>{{ reason }}</td>
+                                                    <td>{{ staffname }}</td>
+                                                    <td>{{ length }} Hours</td>
+                                                    <td>{{ date }}</td>
+                                                </tr>
+                                                {{/ bans }}
+                                            </tbody>
+                                        </table>
+                                        {{/ hasBans }}
+                                        {{^ hasBans }}
+                                        <p class='card-text'>No Bans!</p>
+                                        {{/ hasBans }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='tab-pane fade' id='commends' role='tabpanel' aria-labelledby='commends-tab'>
+                <div class='card-body'>
+                    <h5 class='card-title'>What's This?</h5>
+                    <p class='card-text'>Here you can find all the commends you have gotten from staff members. Each commend adds 3% to your trustscore.</p>
+                    <div class='container' style='max-width: 95%'>
+                        <div class='row'>
+                            <div class='col-3'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'><img class='avatar'
+                                                src='https://cdn.discordapp.com/avatars/{{& id }}/{{& avatar }}'
+                                                alt='Avatar'></h5>
+                                        <h5 class='card-title'>Username</h5>
+                                        <p class='card-text'>{{ username }}#{{ discriminator }}</p>
+                                        <h5 class='card-title'>Trust Score</h5>
+                                        <p class='card-text'>{{ trustscore }}%</p>
+                                        <h5 class='card-title'>Playtime</h5>
+                                        <p class='card-text'>{{ playtime }}</p>
+                                        <h5 class='card-title'>Identifiers</h5>
+                                        <p class='card-text'><samp>discord:{{ id }}</samp></p>
+                                        {{# identifiers }}
+                                            <p class='card-text'><samp>{{ identifier }}</samp></p>    
+                                        {{/ identifiers }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-9'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>Commends</h5>
+                                        {{# canCommend }}
+                                        <p><a href='#' class='btn btn-primary' data-toggle='modal'
+                                                data-target='#commendModal'>Add Commend</a></p>
+                                        {{/ canCommend }}
+                                        {{# hasCommends }}
+                                        <table class='table table-dark'>
+                                            <thead>
+                                                <tr>
+                                                    <th>Reason</th>
+                                                    <th>Staff Member</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{# commends }}
+                                                <tr>
+                                                    <td>{{ reason }}</td>
+                                                    <td>{{ staffname }}</td>
+                                                    <td>{{ date }}</td>
+                                                </tr>
+                                                {{/ commends }}
+                                            </tbody>
+                                        </table>
+                                        {{/ hasCommends }}
+                                        {{^ hasCommends }}
+                                        <p class='card-text'>No Commends!</p>
+                                        {{/ hasCommends }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

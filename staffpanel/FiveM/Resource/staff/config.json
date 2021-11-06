@@ -1,0 +1,7 @@
+{
+    "url": "https://example.com",
+    "ssl": true,
+    "token": "",
+    "identifier": "main",
+    "prefix": "^1[Staff Portal]"
+}

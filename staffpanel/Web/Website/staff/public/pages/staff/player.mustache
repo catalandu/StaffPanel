@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    {{> header }}
+    {{> nav }}
+
+    <script>
+        $(document).ready(() => {
+            
+        })
+
+        const socket = io('/webusers')
+
+        let punishment = false
+
+        {{# canWarn }}
+        function submitWarning() {
+            if (!punishment) {
+                punishment = true
+                socket.emit('addWarning', '{{ id }}', '{{ staff }}', '{{ staffName }}', '{{ username }}#{{ discriminator }}', $('.warning-input').val(), (result) => {
+                    if (result === 'ok') {
+                        location.reload()
+                    } else {
+                        console.log('There was an error while warning this user, please contact administration.')
+                    }
+                })
+            }
+        }
+        {{/ canWarn }}
+
+        {{# canKick }}
+        function submitKick() {
+            if (!punishment) {
+                punishment = true
+                socket.emit('addKick', '{{ id }}', '{{ staff }}', '{{ staffName }}', '{{ username }}#{{ discriminator }}', $('.kick-input').val(), (result) => {
+                    if (result === 'ok') {
+                        location.reload()
+                    } else {
+                        console.log('There was an error while kicking this user, please contact administration.')
+                    }
+                })
+            }
+        }
+        {{/ canKick }}
+
+        {{# canTempBan }}
+        function submitBan() {
+            if (!punishment) {
+                punishment = true
+                const length = $('.ban-length-input').val()
+                if (isNaN(length)) return
+                if (length == 0 || length == '' || length == null || length == undefined) {
+                    {{# canPermBan }}
+                    socket.emit('addBan', '{{ id }}', '{{ staff }}', '{{ staffName }}', '{{ username }}#{{ discriminator }}', $('.ban-input').val(), 0, (result) => {
+                        if (result === 'ok') {
+                            location.reload()
+                        } else {
+                            console.log('There was an error while banning this user, please contact administration.')
+                        }
+                    })
+                    {{/ canPermBan }}
+                } else {
+                    socket.emit('addBan', '{{ id }}', '{{ staff }}', '{{ staffName }}', '{{ username }}#{{ discriminator }}', $('.ban-input').val(), length, (result) => {
+                        if (result === 'ok') {
+                            location.reload()
+                        } else {
+                            console.log('There was an error while banning this user, please contact administration.')
+                        }
+                    })
+                }
+            }
+        }
+        {{/ canTempBan }}
+
+        {{# canCommend }}
+        function submitCommend() {
+            if (!punishment) {
+                punishment = true
+                socket.emit('addCommend', '{{ id }}', '{{ staff }}', '{{ staffName }}', '{{ username }}#{{ discriminator }}', $('.commend-input').val(), (result) => {
+                    if (result === 'ok') {
+                        location.reload()
+                    } else {
+                        console.log('There was an error while commending this user, please contact administration.')
+                    }
+                })
+            }
+        }
+        {{/ canCommend }}
+
+        function submitNote() {
+            if (!punishment) {
+                punishment = true
+                socket.emit('addNote', '{{ id }}', '{{ staff }}', '{{ staffName }}', '<span class="player-username">{{ username }}</span>#{{ discriminator }}', $('.note-input').val(), (result) => {
+                    if (result === 'ok') {
+                        location.reload()
+                    } else {
+                        console.log('There was an error while add a note to this user, please contact administration.')
+                    }
+                })
+            }
+        }
+
+        {{# canRemoveWarn }}
+        function removeWarning(id) {
+            socket.emit('removeWarn', id, (result) => {
+                if (result === 'ok') {
+                    location.reload()
+                } else {
+                    console.log('There was an error while removing a warn from this user, please contact administration.')
+                }
+            })
+        }
+        {{/ canRemoveWarn }}
+
+        {{# canRemoveKick }}
+        function removeKick(id) {
+            socket.emit('removeKick', id, (result) => {
+                if (result === 'ok') {
+                    location.reload()
+                } else {
+                    console.log('There was an error while removing a kick from this user, please contact administration.')
+                }
+            })
+        }
+        {{/ canRemoveKick }}
+
+        {{# canRemoveBan }}
+        function removeBan(id) {
+            socket.emit('removeBan', id, (result) => {
+                if (result === 'ok') {
+                    location.reload()
+                } else {
+                    console.log('There was an error while removing a ban from this user, please contact administration.')
+                }
+            })
+        }
+        {{/ canRemoveBan }}
+
+        {{# canRemoveCommend }}
+        function removeCommend(id) {
+            socket.emit('removeCommend', id, (result) => {
+                if (result === 'ok') {
+                    location.reload()
+                } else {
+                    console.log('There was an error while removing a commend from this user, please contact administration.')
+                }
+            })
+        }
+        {{/ canRemoveCommend }}
+
+        function removeNote(id) {
+            socket.emit('removeNote', id, (result) => {
+                if (result === 'ok') {
+                    location.reload()
+                } else {
+                    console.log('There was an error while removing a note from this user, please contact administration.')
+                }
+            })
+        }
+    </script>
+
+    <style>
+        .nav-link.active {
+            background-color: #343a40 !important;
+            color: white !important;
+            border: 1px solid #343a40 !important;
+        }
+
+        .avatar {
+            vertical-align: middle;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class='text-light' style='text-align: center; margin-top: 20px;'>{{ username }}'s Profile.</h1>
+    <div class='card text-center bg-dark text-white' style='width: 90%; margin: 0 auto; float: none; margin-top: 25px'>
+        <div class='card-header bg-danger'>
+            <ul id='nav-tabs' class='nav nav-tabs card-header-tabs'>
+                <li class='nav-item'>
+                    <a class='nav-link active' style='color: white' id='information-tab' data-toggle='tab'
+                        href='#information' role='tab' aria-controls='information' aria-selected='true'>Information</a>
+                </li>
+                <li class='nav-item'>
+                    <a class='nav-link' style='margin-left: 5px; color: white' id='warnings-tab' data-toggle='tab'
+                        href='#warnings' role='tab' aria-controls='warnings' aria-selected='true'>Warnings</a>
+                </li>
+                <li class='nav-item'>
+                    <a class='nav-link' style='margin-left: 5px; color: white' id='kicks-tab' data-toggle='tab'
+                        href='#kicks' role='tab' aria-controls='kicks' aria-selected='true'>Kicks</a>
+                </li>
+                <li class='nav-item'>
+                    <a class='nav-link' style='margin-left: 5px; color: white' id='bans-tab' data-toggle='tab'
+                        href='#bans' role='tab' aria-controls='bans' aria-selected='true'>Bans</a>
+                </li>
+                <li class='nav-item'>
+                    <a class='nav-link' style='margin-left: 5px; color: white' id='commends-tab' data-toggle='tab'
+                        href='#commends' role='tab' aria-controls='commends' aria-selected='true'>Commends</a>
+                </li>
+            </ul>
+        </div>
+        <div class='tab-content'>
+            <div class='tab-pane fade show active' id='information' role='tabpanel' aria-labelledby='information-tab'>
+                <div class='card-body'>
+                    <h5 class='card-title'>What's This?</h5>
+                    <p class='card-text'>Here you can find information about a player gathered by the portal.</p>
+                    <div class='container' style='max-width: 95%'>
+                        <div class='row'>
+                            <div class='col-3'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'><img class='avatar'
+                                                src='https://cdn.discordapp.com/avatars/{{& id }}/{{& avatar }}'
+                                                alt='Avatar'></h5>
+                                        <h5 class='card-title'>Username</h5>
+                                        <p class='card-text'>{{ username }}#{{ discriminator }}</p>
+                                        <h5 class='card-title'>In-Game Name</h5>
+                                        <p class='card-text'>{{ ingamename }}</p>
+                                        <h5 class='card-title'>Trust Score</h5>
+                                        <p class='card-text'>{{ trustscore }}%</p>
+                                        <h5 class='card-title'>Playtime</h5>
+                                        <p class='card-text'>{{ playtime }}</p>
+                                        <h5 class='card-title'>Identifiers</h5>
+                                        <p class='card-text'><samp>discord:{{ id }}</samp></p>
+                                        {{# identifiers }}
+                                            <p class='card-text'><samp>{{ identifier }}</samp></p>    
+                                        {{/ identifiers }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-9'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>Notes</h5>
+                                        <p><a href='#' class='btn btn-primary' data-toggle='modal'
+                                                data-target='#noteModal'>Add Note</a></p>
+                                        {{# hasNotes }}
+                                        <table class='table table-dark'>
+                                            <thead>
+                                                <tr>
+                                                    <th>Reason</th>
+                                                    <th>Staff Member</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{# notes }}
+                                                <tr>
+                                                    <td>{{ note }}</td>
+                                                    <td>{{ staffname }}</td>
+                                                    <td>{{ date }}</td>
+                                                    <td><a href='javascript:removeNote({{ nid }})'><span
+                                                        class='badge badge-primary'>Remove</span></a></td>
+                                                </tr>
+                                                {{/ notes }}
+                                            </tbody>
+                                        </table>
+                                        {{/ hasNotes }}
+                                        {{^ hasNotes }}
+                                        <p class='card-text'>No Notes!</p>
+                                        {{/ hasNotes }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='tab-pane fade' id='warnings' role='tabpanel' aria-labelledby='warnings-tab'>
+                <div class='card-body'>
+                    <h5 class='card-title'>What's This?</h5>
+                    <p class='card-text'>Here you can find all the warnings you have gotten from staff members.</p>
+                    <div class='container' style='max-width: 95%'>
+                        <div class='row'>
+                            <div class='col-3'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'><img class='avatar'
+                                                src='https://cdn.discordapp.com/avatars/{{& id }}/{{& avatar }}'
+                                                alt='Avatar'></h5>
+                                        <h5 class='card-title'>Username</h5>
+                                        <p class='card-text'>{{ username }}#{{ discriminator }}</p>
+                                        <h5 class='card-title'>Trust Score</h5>
+                                        <p class='card-text'>{{ trustscore }}%</p>
+                                        <h5 class='card-title'>Playtime</h5>
+                                        <p class='card-text'>{{ playtime }}</p>
+                                        <h5 class='card-title'>Identifiers</h5>
+                                        <p class='card-text'><samp>discord:{{ id }}</samp></p>
+                                        {{# identifiers }}
+                                            <p class='card-text'><samp>{{ identifier }}</samp></p>    
+                                        {{/ identifiers }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-9'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>Warnings</h5>
+                                        {{# canWarn }}
+                                        <p><a href='#' class='btn btn-primary' data-toggle='modal'
+                                                data-target='#warningModal'>Add Warning</a></p>
+                                        {{/ canWarn }}
+                                        {{# hasWarnings }}
+                                        <table class='table table-dark'>
+                                            <thead>
+                                                <tr>
+                                                    {{# canRemoveWarn }}
+                                                    <th>Reason</th>
+                                                    {{/ canRemoveWarn }}
+                                                    <th>Staff Member</th>
+                                                    <th>Date</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{# warnings }}
+                                                <tr>
+                                                    <td>{{ reason }}</td>
+                                                    <td>{{ staffname }}</td>
+                                                    <td>{{ date }}</td>
+                                                    {{# canRemoveWarn }}
+                                                    <td><a href='javascript:removeWarning({{ wid }})'><span
+                                                                class='badge badge-primary'>Remove</span></a></td>
+                                                    {{/ canRemoveWarn }}
+                                                </tr>
+                                                {{/ warnings }}
+                                            </tbody>
+                                        </table>
+                                        {{/ hasWarnings }}
+                                        {{^ hasWarnings }}
+                                        <p class='card-text'>No Warnings!</p>
+                                        {{/ hasWarnings }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='tab-pane fade' id='kicks' role='tabpanel' aria-labelledby='kicks-tab'>
+                <div class='card-body'>
+                    <h5 class='card-title'>What's This?</h5>
+                    <p class='card-text'>Here you can find all the kicks you have gotten from staff members.</p>
+                    <div class='container' style='max-width: 95%'>
+                        <div class='row'>
+                            <div class='col-3'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'><img class='avatar'
+                                                src='https://cdn.discordapp.com/avatars/{{& id }}/{{& avatar }}'
+                                                alt='Avatar'></h5>
+                                        <h5 class='card-title'>Username</h5>
+                                        <p class='card-text'>{{ username }}#{{ discriminator }}</p>
+                                        <h5 class='card-title'>Trust Score</h5>
+                                        <p class='card-text'>{{ trustscore }}%</p>
+                                        <h5 class='card-title'>Playtime</h5>
+                                        <p class='card-text'>{{ playtime }}</p>
+                                        <h5 class='card-title'>Identifiers</h5>
+                                        <p class='card-text'><samp>discord:{{ id }}</samp></p>
+                                        {{# identifiers }}
+                                            <p class='card-text'><samp>{{ identifier }}</samp></p>    
+                                        {{/ identifiers }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-9'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>Kicks</h5>
+                                        {{# canKick }}
+                                        <p><a href='#' class='btn btn-primary' data-toggle='modal'
+                                                data-target='#kickModal'>Add Kick</a></p>
+                                        {{/ canKick }}
+                                        {{# hasKicks }}
+                                        <table class='table table-dark'>
+                                            <thead>
+                                                <tr>
+                                                    <th>Reason</th>
+                                                    <th>Staff Member</th>
+                                                    <th>Date</th>
+                                                    {{# canRemoveKick }}
+                                                    <th></th>
+                                                    {{/ canRemoveKick }}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{# kicks }}
+                                                <tr>
+                                                    <td>{{ reason }}</td>
+                                                    <td>{{ staffname }}</td>
+                                                    <td>{{ date }}</td>
+                                                    {{# canRemoveKick }}
+                                                    <td><a href='javascript:removeKick({{ kid }})'><span
+                                                        class='badge badge-primary'>Remove</span></a></td>
+                                                    {{/ canRemoveKick }}
+                                                </tr>
+                                                {{/ kicks }}
+                                            </tbody>
+                                        </table>
+                                        {{/ hasKicks }}
+                                        {{^ hasKicks }}
+                                        <p class='card-text'>No Kicks!</p>
+                                        {{/ hasKicks }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='tab-pane fade' id='bans' role='tabpanel' aria-labelledby='bans-tab'>
+                <div class='card-body'>
+                    <h5 class='card-title'>What's This?</h5>
+                    <p class='card-text'>Here you can find all the bans you have gotten from staff members.</p>
+                    <div class='container' style='max-width: 95%'>
+                        <div class='row'>
+                            <div class='col-3'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'><img class='avatar'
+                                                src='https://cdn.discordapp.com/avatars/{{& id }}/{{& avatar }}'
+                                                alt='Avatar'></h5>
+                                        <h5 class='card-title'>Username</h5>
+                                        <p class='card-text'>{{ username }}#{{ discriminator }}</p>
+                                        <h5 class='card-title'>Trust Score</h5>
+                                        <p class='card-text'>{{ trustscore }}%</p>
+                                        <h5 class='card-title'>Playtime</h5>
+                                        <p class='card-text'>{{ playtime }}</p>
+                                        <h5 class='card-title'>Identifiers</h5>
+                                        <p class='card-text'><samp>discord:{{ id }}</samp></p>
+                                        {{# identifiers }}
+                                            <p class='card-text'><samp>{{ identifier }}</samp></p>    
+                                        {{/ identifiers }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-9'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>Bans</h5>
+                                        {{# canTempBan }}
+                                        <p><a href='#' class='btn btn-primary' data-toggle='modal'
+                                                data-target='#banModal'>Add Ban</a></p>
+                                        {{/ canTempBan }}
+                                        {{# hasBans }}
+                                        <table class='table table-dark'>
+                                            <thead>
+                                                <tr>
+                                                    <th>Reason</th>
+                                                    <th>Staff Member</th>
+                                                    <th>Length</th>
+                                                    <th>Date</th>
+                                                    {{# canRemoveBan }}
+                                                    <th></th>
+                                                    {{/ canRemoveBan }}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{# bans }}
+                                                <tr>
+                                                    <td>{{ reason }}</td>
+                                                    <td>{{ staffname }}</td>
+                                                    <td>{{ length }} Hours</td>
+                                                    <td>{{ date }}</td>
+                                                    {{# canRemoveBan }}
+                                                    <td><a href='javascript:removeBan({{ bid }})'><span
+                                                        class='badge badge-primary'>Remove</span></a></td>
+                                                    {{/ canRemoveBan }}
+                                                </tr>
+                                                {{/ bans }}
+                                            </tbody>
+                                        </table>
+                                        {{/ hasBans }}
+                                        {{^ hasBans }}
+                                        <p class='card-text'>No Bans!</p>
+                                        {{/ hasBans }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='tab-pane fade' id='commends' role='tabpanel' aria-labelledby='commends-tab'>
+                <div class='card-body'>
+                    <h5 class='card-title'>What's This?</h5>
+                    <p class='card-text'>Here you can find all the commends you have gotten from staff members. Each commend adds 3% to your trustscore.</p>
+                    <div class='container' style='max-width: 95%'>
+                        <div class='row'>
+                            <div class='col-3'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'><img class='avatar'
+                                                src='https://cdn.discordapp.com/avatars/{{& id }}/{{& avatar }}'
+                                                alt='Avatar'></h5>
+                                        <h5 class='card-title'>Username</h5>
+                                        <p class='card-text'>{{ username }}#{{ discriminator }}</p>
+                                        <h5 class='card-title'>Trust Score</h5>
+                                        <p class='card-text'>{{ trustscore }}%</p>
+                                        <h5 class='card-title'>Playtime</h5>
+                                        <p class='card-text'>{{ playtime }}</p>
+                                        <h5 class='card-title'>Identifiers</h5>
+                                        <p class='card-text'><samp>discord:{{ id }}</samp></p>
+                                        {{# identifiers }}
+                                            <p class='card-text'><samp>{{ identifier }}</samp></p>    
+                                        {{/ identifiers }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-9'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>Commends</h5>
+                                        {{# canCommend }}
+                                        <p><a href='#' class='btn btn-primary' data-toggle='modal'
+                                                data-target='#commendModal'>Add Commend</a></p>
+                                        {{/ canCommend }}
+                                        {{# hasCommends }}
+                                        <table class='table table-dark'>
+                                            <thead>
+                                                <tr>
+                                                    <th>Reason</th>
+                                                    <th>Staff Member</th>
+                                                    <th>Date</th>
+                                                    {{# canRemoveCommend }}
+                                                    <th></th>
+                                                    {{/ canRemoveCommend }}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{# commends }}
+                                                <tr>
+                                                    <td>{{ reason }}</td>
+                                                    <td>{{ staffname }}</td>
+                                                    <td>{{ date }}</td>
+                                                    {{# canRemoveCommend }}
+                                                    <td><a href='javascript:removeCommend({{ cid }})'><span
+                                                        class='badge badge-primary'>Remove</span></a></td>
+                                                    {{/ canRemoveCommend }}
+                                                </tr>
+                                                {{/ commends }}
+                                            </tbody>
+                                        </table>
+                                        {{/ hasCommends }}
+                                        {{^ hasCommends }}
+                                        <p class='card-text'>No Commends!</p>
+                                        {{/ hasCommends }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{# canWarn }}
+    <div class='modal fade' id='warningModal' tabindex='-1' role='dialog' aria-labelledby='warningLabel'
+        aria-hidden='true'>
+        <div class='modal-dialog' role='document'>
+            <div class='modal-content bg-dark text-white'>
+                <div class='modal-header'>
+                    <h5 class='modal-title' id='warningLabel'>Add Warning</h5>
+                    <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                        <span aria-hidden='true'>&times;</span>
+                    </button>
+                </div>
+                <div class='modal-body'>
+                    <form>
+                        <div class='form-group'>
+                            <label for='warningReason'>Warning Reason</label>
+                            <input type='text' class='form-control warning-input' id='warningReason'
+                                placeholder='Enter Warning Reason'>
+                        </div>
+                    </form>
+                </div>
+                <div class='modal-footer'>
+                    <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
+                    <button type='button' class='btn btn-primary' onclick='submitWarning()'>Warn</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/ canWarn }}
+
+    {{# canKick }}
+    <div class='modal fade' id='kickModal' tabindex='-1' role='dialog' aria-labelledby='kickLabel' aria-hidden='true'>
+        <div class='modal-dialog' role='document'>
+            <div class='modal-content bg-dark text-white'>
+                <div class='modal-header'>
+                    <h5 class='modal-title' id='kickLabel'>Add Kick</h5>
+                    <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                        <span aria-hidden='true'>&times;</span>
+                    </button>
+                </div>
+                <div class='modal-body'>
+                    <form>
+                        <div class='form-group'>
+                            <label for='kickReason'>Kick Reason</label>
+                            <input type='text' class='form-control kick-input' id='kickReason'
+                                placeholder='Enter Kick Reason'>
+                        </div>
+                    </form>
+                </div>
+                <div class='modal-footer'>
+                    <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
+                    <button type='button' class='btn btn-primary' onclick='submitKick()'>Kick</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/ canKick }}
+
+    {{# canTempBan }}
+    <div class='modal fade' id='banModal' tabindex='-1' role='dialog' aria-labelledby='banLabel' aria-hidden='true'>
+        <div class='modal-dialog' role='document'>
+            <div class='modal-content bg-dark text-white'>
+                <div class='modal-header'>
+                    <h5 class='modal-title' id='banLabel'>Add Ban</h5>
+                    <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                        <span aria-hidden='true'>&times;</span>
+                    </button>
+                </div>
+                <div class='modal-body'>
+                    <form>
+                        <div class='form-group'>
+                            <label for='banReason'>Ban Reason</label>
+                            <input type='text' class='form-control ban-input' id='banReason'
+                                placeholder='Enter Ban Reason'>
+                            <br>
+                            <label for='banReason'>Ban Length</label>
+                            <input type='text' class='form-control ban-length-input' id='banLength'
+                                placeholder='Enter Ban Length (Hours)'>
+                        </div>
+                    </form>
+                </div>
+                <div class='modal-footer'>
+                    <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
+                    <button type='button' class='btn btn-primary' onclick='submitBan()'>Ban</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/ canTempBan }}
+
+    {{# canCommend }}
+    <div class='modal fade' id='commendModal' tabindex='-1' role='dialog' aria-labelledby='commendLabel' aria-hidden='true'>
+        <div class='modal-dialog' role='document'>
+            <div class='modal-content bg-dark text-white'>
+                <div class='modal-header'>
+                    <h5 class='modal-title' id='commendLabel'>Add Commend</h5>
+                    <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                        <span aria-hidden='true'>&times;</span>
+                    </button>
+                </div>
+                <div class='modal-body'>
+                    <form>
+                        <div class='form-group'>
+                            <label for='commendReason'>Commend Reason</label>
+                            <input type='text' class='form-control commend-input' id='commendReason'
+                                placeholder='Enter Commend Reason'>
+                        </div>
+                    </form>
+                </div>
+                <div class='modal-footer'>
+                    <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
+                    <button type='button' class='btn btn-primary' onclick='submitCommend()'>Commend</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/ canCommend }}
+
+    <div class='modal fade' id='noteModal' tabindex='-1' role='dialog' aria-labelledby='noteLabel' aria-hidden='true'>
+        <div class='modal-dialog' role='document'>
+            <div class='modal-content bg-dark text-white'>
+                <div class='modal-header'>
+                    <h5 class='modal-title' id='noteLabel'>Add Note</h5>
+                    <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                        <span aria-hidden='true'>&times;</span>
+                    </button>
+                </div>
+                <div class='modal-body'>
+                    <form>
+                        <div class='form-group'>
+                            <label for='noteReason'>Note Reason</label>
+                            <input type='text' class='form-control note-input' id='noteReason'
+                                placeholder='Enter Note Reason'>
+                        </div>
+                    </form>
+                </div>
+                <div class='modal-footer'>
+                    <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
+                    <button type='button' class='btn btn-primary' onclick='submitNote()'>Note</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

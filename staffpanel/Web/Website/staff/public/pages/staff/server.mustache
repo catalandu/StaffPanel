@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    {{> header }}
+    {{> nav }}
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/dataTables.bootstrap4.min.js'></script>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap4.min.css'/>
+
+    <script>
+        const socket = io('/webusers')
+
+        socket.on('connect', () => {
+            setTimeout(() => {
+                socket.emit('getServerStatus', '{{ identifier }}', (result) => {
+                    if (result) {
+                        const element = $('.server-status')
+
+                        element.html('Online')
+                        element.removeClass('badge-danger')
+                        element.addClass('badge-success')
+                    }
+                })
+            }, 10)
+        })
+    </script>
+
+    <style>
+        .nav-link.active {
+            background-color: #343a40 !important;
+            color: white !important;
+            border: 1px solid #343a40 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class='text-light' style='text-align: center; margin-top: 20px;'>{{ name }} <span class='server-status badge badge-danger'>Offline</span></h1>
+    <div class='card text-center bg-dark text-white' style='width: 90%; margin: 0 auto; float: none; margin-top: 25px'>
+        <div class='card-header bg-danger'>
+            <ul id='nav-tabs' class='nav nav-tabs card-header-tabs'>
+                <li class='nav-item'>
+                    <a class='nav-link active' style='color: white' id='information-tab' data-toggle='tab' href='#all'
+                        role='tab' aria-controls='all' aria-selected='true'>All</a>
+                </li>
+                <li class='nav-item'>
+                    <a class='nav-link' style='margin-left: 5px; color: white' id='information-tab' data-toggle='tab' href='#recentplayers'
+                        role='tab' aria-controls='recentplayers' aria-selected='false'>Recent Players</a>
+                </li>
+            </ul>
+        </div>
+        <div class='tab-content'>
+            <div class='tab-pane fade show active' id='all' role='tabpanel' aria-labelledby='all-tab'>
+                <div class='card-body'>
+                    <h5 class='card-title'>What's This?</h5>
+                    <p class='card-text'>Here you can find all players currently connected to this server.</p>
+                    <div class='container' style='max-width: 95%'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>Players ({{ totalPlayers }})</h5>
+                                        <table class='table table-dark table-striped'>
+                                            <thead>
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th>Name</th>
+                                                    <th>Ping</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{# players }}
+                                                <tr style='cursor: pointer' onclick='window.location="/staff/player/{{ id }}"'>
+                                                    <th>{{ source }}</th>
+                                                    <th>{{ name }}</th>
+                                                    <th>{{ ping }}</th>
+                                                </tr>
+                                                {{/ players }}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='tab-pane fade show' id='recentplayers' role='tabpanel' aria-labelledby='recentplayers-tab'>
+                <div class='card-body'>
+                    <h5 class='card-title'>What's This?</h5>
+                    <p class='card-text'>Here you can find all players that have recently connected to this server.</p>
+                    <div class='container' style='max-width: 95%'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>Players ({{ totalPlayers }})</h5>
+                                        <table class='table table-dark table-striped'>
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Reason Left</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{# recentPlayers }}
+                                                <tr style='cursor: pointer' onclick='window.location="/staff/player/{{ id }}"'>
+                                                    <th>{{ name }}</th>
+                                                    <th>{{ reason }}</th>
+                                                </tr>
+                                                {{/ recentPlayers }}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

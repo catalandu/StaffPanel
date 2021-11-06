@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    {{> header }}
+    {{> nav }}
+
+    <script>
+        const socket = io('/webusers')
+
+        socket.on('connect', () => {
+            setTimeout(() => {
+                {{# servers }}
+                socket.emit('getServerStatus', '{{ identifier }}', (result) => {
+                    if (result) {
+                        const element = $('.server-{{ identifier }}')
+
+                        element.html('Online')
+                        element.removeClass('badge-danger')
+                        element.addClass('badge-success')
+                    }
+                })
+                {{/ servers }}
+            }, 10)
+        })
+
+        let removing = false
+        function submitServer() {
+            if (!removing) {
+                removing = true
+                socket.emit('addServer', $('.server-input').val(), $('.server-name-input').val(), (result) => {
+                    if (result === 'ok') {
+                        location.reload()
+                    } else {
+                        console.log('There was an error while adding this server, please contact administration.')
+                    }
+                })
+            }
+        }
+
+        function removeServer(identifier) {
+            if (!removing) {
+                removing = true
+                socket.emit('removeServer', identifier, (result) => {
+                    if (result === 'ok') {
+                        location.reload()
+                    } else {
+                        console.log('There was an error while adding this server, please contact administration.')
+                    }
+                })
+            }
+        }
+    </script>
+
+    <style>
+        .nav-link.active {
+            background-color: #343a40 !important;
+            color: white !important;
+            border: 1px solid #343a40 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class='text-light' style='text-align: center; margin-top: 20px;'>Servers</h1>
+    <div class='card text-center bg-dark text-white' style='width: 90%; margin: 0 auto; float: none; margin-top: 25px'>
+        <div class='card-header bg-danger'>
+            <ul id='nav-tabs' class='nav nav-tabs card-header-tabs'>
+                <li class='nav-item'>
+                    <a class='nav-link active' style='color: white' id='information-tab' data-toggle='tab' href='#all'
+                        role='tab' aria-controls='information' aria-selected='true'>All</a>
+                </li>
+            </ul>
+        </div>
+        <div class='tab-content'>
+            <div class='tab-pane fade show active' id='all' role='tabpanel' aria-labelledby='all-tab'>
+                <div class='card-body'>
+                    <h5 class='card-title'>What's This?</h5>
+                    <p class='card-text'>Here you can find all servers currently connected to the portal.</p>
+                    <div class='container' style='max-width: 95%'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>Servers</h5>
+                                        <p><a href='#' class='btn btn-primary' data-toggle='modal'
+                                            data-target='#serverModal'>Add Server</a></p>
+                                        <table class='table table-dark table-striped'>
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{# servers }}
+                                                <tr style='cursor: pointer'>
+                                                    <th>{{ name }}</th>
+                                                    <th><span
+                                                        class='server-{{ identifier }} badge badge-danger'>Offline</span></th>
+                                                    <th><a href='javascript:removeServer("{{ identifier }}")'><span
+                                                        class='badge badge-danger'>Remove</span></a></th>
+                                                </tr>
+                                                {{/ servers }}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class='modal fade' id='serverModal' tabindex='-1' role='dialog' aria-labelledby='serverLabel' aria-hidden='true'>
+        <div class='modal-dialog' role='document'>
+            <div class='modal-content bg-dark text-white'>
+                <div class='modal-header'>
+                    <h5 class='modal-title' id='serverLabel'>Add Server</h5>
+                    <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                        <span aria-hidden='true'>&times;</span>
+                    </button>
+                </div>
+                <div class='modal-body'>
+                    <form>
+                        <div class='form-group'>
+                            <label for='serverIdentifier'>Server Identifier</label>
+                            <input type='text' class='form-control server-input' id='serverIdentifier'
+                                placeholder='Enter Server Identifier'>
+                            <br>
+                            <label for='serverName'>Server Name</label>
+                            <input type='text' class='form-control server-name-input' id='serverName'
+                                placeholder='Enter Server Name'>
+                        </div>
+                    </form>
+                </div>
+                <div class='modal-footer'>
+                    <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
+                    <button type='button' class='btn btn-primary' onclick='submitServer()'>Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,40 @@
+{
+    "port": "3000",
+    "url": "https://example.com",
+    "community_name": "My Community",
+    "base_trustscore": 75,
+    "token": "",
+    "session_token": "",
+    "discord": {
+        "client_id": "",
+        "client_secret": "",
+        "bot_token": "",
+        "guild_id": "",
+        "webhook": "",
+        "oauth": ""
+    },
+    "database": {
+        "host": "127.0.0.1",
+        "user": "root",
+        "password": "",
+        "db": "portal"
+    },
+    "permissions": {
+        "1234": [
+            "staff",
+            "warn",
+            "kick",
+            "tempban",
+            "permban",
+            "commend",
+            "removewarn",
+            "removekick",
+            "removeban",
+            "removecommend",
+            "admin"
+        ]
+    },
+    "ace_groups": {
+        "1234": "admin"
+    }
+}

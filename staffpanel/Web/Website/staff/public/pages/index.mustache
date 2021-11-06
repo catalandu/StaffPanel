@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    {{> header }}
+    {{> nav }}
+</head>
+
+<body>
+    <h1 class='text-light' style='text-align: center; margin-top: 200px;'> Welcome {{ username }}, to the {{ community_name }} portal.</h1>
+    <h1 class='text-light' style='text-align: center'> Redirecting you to your profile in <span class='countdown'>3</span> seconds.</h1>
+
+    <script>
+        setInterval(() => {
+            if (parseInt($('.countdown').html()) === 0) window.location.href = '/dashboard/profile'
+            if (parseInt($('.countdown').html()) > 0) $('.countdown').html(parseInt($('.countdown').html()) - 1)
+        }, 1000)
+    </script>
+</body>
+
+</html>

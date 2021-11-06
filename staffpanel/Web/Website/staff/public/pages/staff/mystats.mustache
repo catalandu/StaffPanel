@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    {{> header }}
+    {{> nav }}
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.2.0/chart.min.js'></script>
+
+    <script>
+        $(document).ready(() => {
+            const data = {
+                labels: [
+                    'Warnings',
+                    'Kicks',
+                    'Bans'
+                ],
+                datasets: [{
+                    label: 'Total Punishments',
+                    data: [{{ totalWarns }}, {{ totalKicks }}, {{ totalBans }}],
+                    backgroundColor: [
+                        'rgb(255, 205, 86)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 99, 132)'
+                    ]
+                }]
+            }   
+
+            const config = {
+                type: 'doughnut',
+                data: data,
+            }
+
+            new Chart(
+                document.getElementById('totalStats'),
+                config
+            )
+
+            const data2 = {
+                labels: [
+                    'Warnings',
+                    'Kicks',
+                    'Bans'
+                ],
+                datasets: [{
+                    label: 'Total Punishments (Last Week)',
+                    data: [{{ totalWarnsWeek }}, {{ totalKicksWeek }}, {{ totalBansWeek }}],
+                    backgroundColor: [
+                        'rgb(255, 205, 86)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 99, 132)'
+                    ]
+                }]
+            }   
+
+            const config2 = {
+                type: 'doughnut',
+                data: data2,
+            }
+
+            new Chart(
+                document.getElementById('totalStatsWeek'),
+                config2
+            )
+
+            const data3 = {
+                labels: [
+                    'Warnings',
+                    'Kicks',
+                    'Bans'
+                ],
+                datasets: [{
+                    label: 'Total Punishments (Last Month)',
+                    data: [{{ totalWarnsMonth }}, {{ totalKicksMonth }}, {{ totalBansMonth }}],
+                    backgroundColor: [
+                        'rgb(255, 205, 86)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 99, 132)'
+                    ]
+                }]
+            }   
+
+            const config3 = {
+                type: 'doughnut',
+                data: data3,
+            }
+
+            new Chart(
+                document.getElementById('totalStatsMonth'),
+                config3
+            )
+
+            const labels = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ]
+            const data4 = {
+                labels: labels,
+                datasets: [{
+                    label: 'All Punishments Dates',
+                    data: [{{# allPunishments }} {{ amount }}, {{/ allPunishments }}],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 205, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(201, 203, 207, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(255, 159, 64)',
+                        'rgb(255, 205, 86)',
+                        'rgb(75, 192, 192)',
+                        'rgb(54, 162, 235)',
+                        'rgb(153, 102, 255)',
+                        'rgb(201, 203, 207)'
+                    ],
+                    borderWidth: 1
+                }]
+            }
+
+            const config4 = {
+                type: 'bar',
+                data: data4,
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                },
+            }
+
+            new Chart(
+                document.getElementById('totalStatsOverall'),
+                config4
+            )
+        })
+    </script>
+
+    <style>
+        .nav-link.active {
+            background-color: #343a40 !important;
+            color: white !important;
+            border: 1px solid #343a40 !important;
+        }
+
+        .avatar {
+            vertical-align: middle;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class='text-light' style='text-align: center; margin-top: 20px;'> {{ username }}'s Stats.</h1>
+    <div class='card text-center bg-dark text-white' style='width: 90%; margin: 0 auto; float: none; margin-top: 25px'>
+        <div class='card-header bg-danger'>
+            <ul id='nav-tabs' class='nav nav-tabs card-header-tabs'>
+                <li class='nav-item'>
+                    <a class='nav-link active' style='color: white' id='information-tab' data-toggle='tab'
+                        href='#information' role='tab' aria-controls='information' aria-selected='true'>Information</a>
+                </li>
+                <li class='nav-item'>
+                    <a class='nav-link' style='margin-left: 5px; color: white' id='warnings-tab' data-toggle='tab'
+                        href='#warnings' role='tab' aria-controls='warnings' aria-selected='true'>Warnings</a>
+                </li>
+                <li class='nav-item'>
+                    <a class='nav-link' style='margin-left: 5px; color: white' id='kicks-tab' data-toggle='tab'
+                        href='#kicks' role='tab' aria-controls='kicks' aria-selected='true'>Kicks</a>
+                </li>
+                <li class='nav-item'>
+                    <a class='nav-link' style='margin-left: 5px; color: white' id='bans-tab' data-toggle='tab'
+                        href='#bans' role='tab' aria-controls='bans' aria-selected='true'>Bans</a>
+                </li>
+                <li class='nav-item'>
+                    <a class='nav-link' style='margin-left: 5px; color: white' id='commends-tab' data-toggle='tab'
+                        href='#commends' role='tab' aria-controls='commends' aria-selected='true'>Commends</a>
+                </li>
+            </ul>
+        </div>
+        <div class='tab-content'>
+            <div class='tab-pane fade show active' id='information' role='tabpanel' aria-labelledby='information-tab'>
+                <div class='card-body'>
+                    <h5 class='card-title'>What's This?</h5>
+                    <p class='card-text'>Here you can find information about a staff member gathered by the portal.</p>
+                    <div class='container' style='max-width: 95%'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>Statistics</h5>
+                                        <p class='card-text'>
+                                            <div class='container' style='max-width: 95%'>
+                                                <div class='row'>
+                                                    <div class='col-4' style='width: 500px; height: 500px'>
+                                                        <h6>Total Punishments</h5>
+                                                        <canvas id='totalStats'></canvas>
+                                                    </div>
+                                                    <div class='col-4' style='width: 500px; height: 500px'>
+                                                        <h6>Total Punishments (Last Week)</h5>
+                                                        <canvas id='totalStatsWeek'></canvas>
+                                                    </div>
+                                                    <div class='col-4' style='width: 500px; height: 500px'>
+                                                        <h6>Total Punishments (Last Month)</h5>
+                                                        <canvas id='totalStatsMonth'></canvas>
+                                                    </div>
+                                                </div>
+                                                <div class='row'>
+                                                    <div class='col-12'>
+                                                        <h6>Total Punishments (Over Time)</h5>
+                                                        <canvas id='totalStatsOverall'></canvas>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='tab-pane fade' id='warnings' role='tabpanel' aria-labelledby='warnings-tab'>
+                <div class='card-body'>
+                    <h5 class='card-title'>What's This?</h5>
+                    <p class='card-text'>Here you can find all the warnings this staff member has given.</p>
+                    <div class='container' style='max-width: 95%'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>Warnings</h5>
+                                        {{# hasWarnings }}
+                                        <table class='table table-dark'>
+                                            <thead>
+                                                <tr>
+                                                    <th>Reason</th>
+                                                    <th>Player</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{# warnings }}
+                                                <tr>    
+                                                    <td>{{ reason }}</td>
+                                                    <td>{{ playername }}</td>
+                                                    <td>{{ date }}</td>
+                                                </tr>
+                                                {{/ warnings }}
+                                            </tbody>
+                                        </table>
+                                        {{/ hasWarnings }}
+                                        {{^ hasWarnings }}
+                                        <p class='card-text'>No Warnings!</p>
+                                        {{/ hasWarnings }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='tab-pane fade' id='kicks' role='tabpanel' aria-labelledby='kicks-tab'>
+                <div class='card-body'>
+                    <h5 class='card-title'>What's This?</h5>
+                    <p class='card-text'>Here you can find all the kicks this staff member has given.</p>
+                    <div class='container' style='max-width: 95%'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>Kicks</h5>
+                                        {{# hasKicks }}
+                                        <table class='table table-dark'>
+                                            <thead>
+                                                <tr>
+                                                    <th>Reason</th>
+                                                    <th>Player</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{# kicks }}
+                                                <tr>    
+                                                    <td>{{ reason }}</td>
+                                                    <td>{{ playername }}</td>
+                                                    <td>{{ date }}</td>
+                                                </tr>
+                                                {{/ kicks }}
+                                            </tbody>
+                                        </table>
+                                        {{/ hasKicks }}
+                                        {{^ hasKicks }}
+                                        <p class='card-text'>No Kicks!</p>
+                                        {{/ hasKicks }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='tab-pane fade' id='bans' role='tabpanel' aria-labelledby='bans-tab'>
+                <div class='card-body'>
+                    <h5 class='card-title'>What's This?</h5>
+                    <p class='card-text'>Here you can find all the bans this staff member has given.</p>
+                    <div class='container' style='max-width: 95%'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>Bans</h5>
+                                        {{# hasBans }}
+                                        <table class='table table-dark'>
+                                            <thead>
+                                                <tr>
+                                                    <th>Reason</th>
+                                                    <th>Player</th>
+                                                    <th>Length</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{# bans }}
+                                                <tr>    
+                                                    <td>{{ reason }}</td>
+                                                    <td>{{ playername }}</td>
+                                                    <td>{{ length }} Hours</td>
+                                                    <td>{{ date }}</td>
+                                                </tr>
+                                                {{/ bans }}
+                                            </tbody>
+                                        </table>
+                                        {{/ hasBans }}
+                                        {{^ hasBans }}
+                                        <p class='card-text'>No Bans!</p>
+                                        {{/ hasBans }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='tab-pane fade' id='commends' role='tabpanel' aria-labelledby='commends-tab'>
+                <div class='card-body'>
+                    <h5 class='card-title'>What's This?</h5>
+                    <p class='card-text'>Here you can find all the commends this staff member has given.</p>
+                    <div class='container' style='max-width: 95%'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <div class='card text-center bg-dark text-white'>
+                                    <div class='card-header bg-danger'></div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>Commends</h5>
+                                        {{# canCommend }}
+                                        <p><a href='#' class='btn btn-primary' data-toggle='modal'
+                                                data-target='#commendModal'>Add Commend</a></p>
+                                        {{/ canCommend }}
+                                        {{# hasCommends }}
+                                        <table class='table table-dark'>
+                                            <thead>
+                                                <tr>
+                                                    <th>Reason</th>
+                                                    <th>Player</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{# commends }}
+                                                <tr>
+                                                    <td>{{ reason }}</td>
+                                                    <td>{{ playername }}</td>
+                                                    <td>{{ date }}</td>
+                                                </tr>
+                                                {{/ commends }}
+                                            </tbody>
+                                        </table>
+                                        {{/ hasCommends }}
+                                        {{^ hasCommends }}
+                                        <p class='card-text'>No Commends!</p>
+                                        {{/ hasCommends }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
